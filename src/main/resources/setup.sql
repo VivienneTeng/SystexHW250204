@@ -36,15 +36,20 @@ CREATE TABLE Categories (
 CREATE TABLE Books (
     BookID INT AUTO_INCREMENT PRIMARY KEY,  -- 書籍唯一識別碼
     Title VARCHAR(255) NOT NULL,             -- 書名
+    
     AuthorID INT NOT NULL DEFAULT 1,        -- 預設為 "佚名"（AuthorID = 1）
     CategoryID INT,                          -- 類別 ID（可以為 NULL）
+    
     ISBN VARCHAR(13) UNIQUE NOT NULL,        -- 書籍 ISBN 編號
-    OriginalPrice DECIMAL(10,2) NOT NULL,    -- **定價**
-    SalePrice DECIMAL(10,2) NOT NULL,        -- **售價**
+    OriginalPrice INT NOT NULL,    -- **定價**
+    SalePrice INT NOT NULL,        -- **售價**
     PublishedDate DATE,                       -- 出版日期
     StockQuantity INT NOT NULL,               -- 庫存數量
+    Describe TEXT NULL             -- 簡介
+
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 創建時間
     UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新時間
+
     FOREIGN KEY (AuthorID) REFERENCES Authors(AuthorID) ON DELETE SET DEFAULT,  -- 刪除作者時變 "佚名"
     FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID) ON DELETE SET NULL -- 刪除分類時設為 NULL
 );
@@ -60,7 +65,7 @@ VALUES
     ('Fiction', 'Fictional books including novels and stories.'),
     ('Science Fiction', 'Books based on speculative scientific concepts.');
 
-INSERT INTO Books (Title, AuthorID, CategoryID, ISBN, Price, PublishedDate, StockQuantity) 
+INSERT INTO Books (Title, AuthorID, CategoryID, ISBN, OriginalPrice, SalePrice, PublishedDate, StockQuantity, Describe) 
 VALUES 
-    ('Harry Potter and the Sorcerer''s Stone', 2, 1, '9780439708180', 19.99, '1997-06-26', 100),
-    ('1984', 3, 2, '9780451524935', 14.99, '1949-06-08', 50);
+    ('Harry Potter and the Sorcerer''s Stone', 2, 1, '9780439708180', 494, 360, '1997-06-26', 100, 'A young wizard discovers his magical heritage and embarks on an epic journey at Hogwarts.'),
+    ('1984', 3, 2, '9780451524935', 490, 387, '1949-06-08', 50, 'A dystopian novel depicting a totalitarian regime that controls every aspect of life.');
