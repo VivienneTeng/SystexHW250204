@@ -8,6 +8,7 @@ import com.example.bookstore.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,6 +38,7 @@ public class BookController {
 
     // 新增書籍
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Book> createBook(@RequestBody BookDto bookDto) {
         Book createdBook = bookService.createBook(bookDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
@@ -45,6 +47,7 @@ public class BookController {
 
     // 更新書籍
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BookDto> updateBook(@PathVariable Long id, @RequestBody BookDto bookDto) {
         BookDto updatedBook = bookService.updateBook(id, bookDto);
         return ResponseEntity.ok(updatedBook);
@@ -52,6 +55,7 @@ public class BookController {
 
     // 刪除書籍
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
