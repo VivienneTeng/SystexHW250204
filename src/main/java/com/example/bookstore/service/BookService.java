@@ -1,8 +1,8 @@
-package com.bookstore.service;
+package com.example.bookstore.service;
 
-import com.bookstore.dto.BookDto;
-import com.bookstore.entity.Book;
-import com.bookstore.exception.ResourceNotFoundException;
+import com.example.bookstore.dto.BookDto;
+import com.example.bookstore.entity.Book;
+import com.example.bookstore.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.Optional;

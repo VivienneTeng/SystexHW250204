@@ -45,7 +45,7 @@ CREATE TABLE Books (
     SalePrice INT NOT NULL,        -- **售價**
     PublishedDate DATE,                       -- 出版日期
     StockQuantity INT NOT NULL,               -- 庫存數量
-    Describe TEXT NULL             -- 簡介
+    Description TEXT NULL,            -- 簡介
 
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 創建時間
     UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新時間
@@ -58,14 +58,39 @@ CREATE TABLE Books (
 INSERT INTO Authors (Name, Biography, BirthDate, Nationality) 
 VALUES 
     ('J.K. Rowling', 'British author, best known for Harry Potter.', '1965-07-31', 'British'),
-    ('George Orwell', 'English novelist and critic, famous for 1984.', '1903-06-25', 'British');
+    ('George Orwell', 'English novelist and critic, famous for 1984.', '1903-06-25', 'British'),
+    ('Isaac Asimov', 'Science fiction writer, best known for the Foundation series.', '1920-01-02', 'American'),
+    ('Arthur C. Clarke', 'British science fiction writer, known for 2001: A Space Odyssey.', '1917-12-16', 'British'),
+    ('J.R.R. Tolkien', 'English writer and professor, best known for The Lord of the Rings.', '1892-01-03', 'British'),
+    ('Agatha Christie', 'Famous detective novel writer, known for Hercule Poirot series.', '1890-09-15', 'British'),
+    ('Stephen King', 'Master of horror and supernatural fiction.', '1947-09-21', 'American'),
+    ( 'Walter Isaacson', 'American writer and journalist, known for biographies of historical figures.', '1952-05-20', 'American'),  -- AuthorID = 9
+    ( 'Yuval Noah Harari', 'Israeli historian and professor, known for Sapiens.', '1976-02-24', 'Israeli'),  -- AuthorID = 10
+    ( 'Robert C. Martin', 'Software engineer and author of Clean Code.', '1952-12-05', 'American'),  -- AuthorID = 11
+    ( 'Andrew Hunt & David Thomas', 'Software developers, authors of The Pragmatic Programmer.', NULL, 'American');  -- AuthorID = 12
+
 
 INSERT INTO Categories (CategoryName, Description) 
 VALUES 
     ('Fiction', 'Fictional books including novels and stories.'),
-    ('Science Fiction', 'Books based on speculative scientific concepts.');
+    ('Science Fiction', 'Books based on speculative scientific concepts.'),
+    ('Mystery', 'Books that involve solving crimes or uncovering secrets.'),
+    ('Fantasy', 'Books with magical or supernatural elements.'),
+    ('Horror', 'Books designed to scare and thrill readers.'),
+    ('Non-Fiction', 'Books based on real events, biographies, and historical accounts.'),
+    ('Technology', 'Books covering technological advancements and computer science.');
 
-INSERT INTO Books (Title, AuthorID, CategoryID, ISBN, OriginalPrice, SalePrice, PublishedDate, StockQuantity, Describe) 
+INSERT INTO Books (Title, AuthorID, CategoryID, ISBN, OriginalPrice, SalePrice, PublishedDate, StockQuantity, Description) 
 VALUES 
     ('Harry Potter and the Sorcerer''s Stone', 2, 1, '9780439708180', 494, 360, '1997-06-26', 100, 'A young wizard discovers his magical heritage and embarks on an epic journey at Hogwarts.'),
-    ('1984', 3, 2, '9780451524935', 490, 387, '1949-06-08', 50, 'A dystopian novel depicting a totalitarian regime that controls every aspect of life.');
+    ('1984', 3, 2, '9780451524935', 490, 387, '1949-06-08', 50, 'A dystopian novel depicting a totalitarian regime that controls every aspect of life.'),
+    ('Foundation', 4, 3, '9780553293357', 520, 450, '1951-06-01', 75, 'A classic sci-fi novel exploring the rise and fall of civilizations.'),
+    ('2001: A Space Odyssey', 5, 3, '9780451457999', 499, 400, '1968-07-16', 60, 'A novel about human evolution, AI, and space exploration.'),
+    ('The Hobbit', 6, 2, '9780345339683', 580, 480, '1937-09-21', 90, 'The adventure of Bilbo Baggins in the fantasy world of Middle-earth.'),
+    ('Murder on the Orient Express', 7, 1, '9780062693662', 390, 350, '1934-01-01', 100, 'A famous detective novel featuring Hercule Poirot.'),
+    ('It', 8, 3, '9781501142970', 699, 650, '1986-09-15', 55, 'A horror novel about a shape-shifting entity terrorizing children.'),
+    ('The Shining', 8, 3, '9780385121675', 640, 580, '1977-01-28', 40, 'A psychological horror novel set in a haunted hotel.'),
+    ('Steve Jobs', 9, 4, '9781451648539', 720, 650, '2011-10-24', 30, 'A biography of Apple co-founder Steve Jobs.'),
+    ('Sapiens: A Brief History of Humankind', 10, 4, '9780062316097', 850, 780, '2011-06-04', 50, 'A historical analysis of the evolution of humans.'),
+    ('Clean Code', 11, 5, '9780132350884', 820, 750, '2008-08-01', 45, 'A book about writing maintainable and efficient code.'),
+    ('The Pragmatic Programmer', 12, 5, '9780201616224', 890, 830, '1999-10-20', 35, 'A guide to software development best practices.');

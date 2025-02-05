@@ -1,10 +1,10 @@
-package com.bookstore.service.impl;
+package com.example.bookstore.service.impl;
 
-import com.bookstore.dao.BookRepository;
-import com.bookstore.dto.BookDto;
-import com.bookstore.entity.Book;
-import com.bookstore.exception.ResourceNotFoundException;
-import com.bookstore.service.BookService;
+import com.example.bookstore.dao.BookRepository;
+import com.example.bookstore.dto.BookDto;
+import com.example.bookstore.entity.Book;
+import com.example.bookstore.exception.ResourceNotFoundException;
+import com.example.bookstore.service.BookService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.Collections;
 
 //未來需要使用 Collectors.toList() 來處理 List<Book> 的轉換
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -76,7 +76,7 @@ public class BookServiceImpl implements BookService {
         book.setOriginalPrice(bookDto.getOriginalPrice());
         book.setSalePrice(bookDto.getSalePrice());
         book.setStockQuantity(bookDto.getStockQuantity());
-        book.setDescribe(bookDto.getDescribe());
+        book.setDescription(bookDto.getDescription());
         book.setUpdatedAt(LocalDateTime.now());
         return book;
     }

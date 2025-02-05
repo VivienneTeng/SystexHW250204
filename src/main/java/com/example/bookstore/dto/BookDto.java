@@ -1,4 +1,4 @@
-package com.bookstore.dto;
+package com.example.bookstore.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ public class BookDto {
     private Integer originalPrice;
     private Integer salePrice;
     private Integer stockQuantity;
-    private String describe;
+    private String Description;
     
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

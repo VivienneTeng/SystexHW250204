@@ -1,4 +1,4 @@
-package com.bookstore.dao;
+package com.example.bookstore.dao;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;                   //Spring註解(@Repository)，代表這個類別是 DAO 層
 
-import com.bookstore.entity.Book;                                   //引入 Book 實體類別
+import com.example.bookstore.entity.Book;                                   //引入 Book 實體類別
 import java.util.List;
 
 
@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
     // 查詢特定作者的書籍
-    List<Book> findByAuthorId(Long authorId);
+    List<Book> findByAuthorId(Long athorId);
 
     // 查詢特定分類的書籍
     List<Book> findByCategoryId(Long categoryId);
