@@ -7,8 +7,9 @@ USE bookstore;
 DROP TABLE IF EXISTS Books;
 DROP TABLE IF EXISTS Authors;
 DROP TABLE IF EXISTS Categories;
-DROP TABLE IF EXISTS Users;
 DROP TABLE IF EXISTS UserRoles;
+DROP TABLE IF EXISTS Roles;
+DROP TABLE IF EXISTS Users;
 
 -- 創建 Authors（作者表）
 CREATE TABLE Authors (
@@ -56,9 +57,20 @@ CREATE TABLE Books (
     FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID) ON DELETE SET NULL -- 刪除分類時設為 NULL
 );
 
+CREATE TABLE Roles (
+    RoleId INT AUTO_INCREMENT PRIMARY KEY,  -- 角色唯一識別碼
+    RoleName VARCHAR(50) NOT NULL UNIQUE   -- 角色名稱（EMPLOYEE, BOOK_MANAGER, ADMIN）
+);
+
+INSERT INTO Roles (RoleName) 
+VALUES
+    ('EMPLOYEE'),
+    ('BOOK_MANAGER'),
+    ('ADMIN');
+
 CREATE TABLE Users (
-    UsersId BIGINT AUTO_INCREMENT PRIMARY KEY,
-    UsersnNme VARCHAR(255) NOT NULL UNIQUE,
+    UserId BIGINT AUTO_INCREMENT PRIMARY KEY,
+    Username VARCHAR(255) NOT NULL UNIQUE,
     Password VARCHAR(255) NOT NULL,
     Name VARCHAR(255) NOT NULL,
     Phone VARCHAR(20) NOT NULL UNIQUE,
@@ -67,11 +79,13 @@ CREATE TABLE Users (
     Updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- 管理使用者與角色的對應關係
 CREATE TABLE UserRoles (
-    UserRoleId BIGINT AUTO_INCREMENT PRIMARY KEY,
     UserId BIGINT NOT NULL,
-    Role VARCHAR(50) NOT NULL,
-    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE
+    RoleId INT NOT NULL,
+    PRIMARY KEY (UserId, RoleId),
+    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
+    FOREIGN KEY (RoleId) REFERENCES Roles(RoleId) ON DELETE CASCADE
 );
 
 
@@ -115,3 +129,18 @@ VALUES
     ('Sapiens: A Brief History of Humankind', 10, 4, '9780062316097', 850, 780, '2011-06-04', 50, 'A historical analysis of the evolution of humans.'),
     ('Clean Code', 11, 5, '9780132350884', 820, 750, '2008-08-01', 45, 'A book about writing maintainable and efficient code.'),
     ('The Pragmatic Programmer', 12, 5, '9780201616224', 890, 830, '1999-10-20', 35, 'A guide to software development best practices.');
+
+-- 插入測試 Users 資料
+INSERT INTO Users (Username, Password, Name, Phone, Email)
+VALUES 
+    ('admin', '$2b$12$tD0j5yjzOXrNlZkQug8R4uDspbPZUwZidkM3Ix0LDdpXUCB5hb4Lq', 'Admin User', '0987654321', 'admin@example.com'),
+    ('employee1', 'hashed_password1', '員工A', '0911111111', 'employee1@example.com'),
+    ('bookmanager1', 'hashed_password2', '書籍管理員A', '0933333333', 'bookmanager1@example.com'),
+    ('admin1', 'hashed_password3', '主管A', '0955555555', 'admin1@example.com');
+
+-- 指派角色到使用者（UserRoles）
+INSERT INTO UserRoles (UserId, RoleId) 
+VALUES
+    (1, 1), -- 員工1 角色: EMPLOYEE
+    (2, 2), -- 書籍管理1 角色: BOOK_MANAGER
+    (3, 3);

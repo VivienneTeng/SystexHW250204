@@ -8,6 +8,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,9 +19,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     // 加載使用者資料的介面
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
 
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
@@ -52,18 +53,19 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) 
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "localhost:8080/").permitAll()
                 .requestMatchers("/api/auth/**").permitAll() // 允許未登入訪問api，實現登入bookstore的功能
+                .requestMatchers("/api/users", "/api/users/{id}").permitAll() // 所有人可查詢員工、特定員工
+                .requestMatchers("/api/users/register").permitAll() // 所有人可註冊新員工
+                .requestMatchers("/api/books", "/api/books/{id}").permitAll() // 所有人可查詢書籍或特定書籍
+                .requestMatchers("/api/books/**").hasRole("BOOK_MANAGER") // 只有 BOOK_MANAGER 可新增、更新、刪除書籍
+                .requestMatchers("/api/users/**").hasRole("ADMIN") // 只有 ADMIN 可變更員工角色、更新員工資訊、刪除員工
                 .anyRequest().authenticated()
             )
-            .formLogin(login -> login
-                .defaultSuccessUrl("/home", true) // 登入成功後跳轉的頁面
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutUrl("/api/auth/logout")          // 登出 API
-                .logoutSuccessUrl("/login?logout")
-                .permitAll()
-            );
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))       // 讓 API 無狀態
+            .formLogin(login -> login.disable())    // 禁用 Spring Security 的預設登入表單
+            .logout(logout -> logout.logoutUrl("/api/auth/logout").permitAll())
+            .httpBasic(basic -> basic.disable());
 
         return http.build();
     }

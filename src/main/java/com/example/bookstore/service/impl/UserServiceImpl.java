@@ -1,9 +1,12 @@
 package com.example.bookstore.service.impl;
 
 import com.example.bookstore.dao.UserRepository;
+import com.example.bookstore.dao.RoleRepository;
 import com.example.bookstore.dto.UserDto;
 import com.example.bookstore.entity.User;
+import com.example.bookstore.entity.Role;
 import com.example.bookstore.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @Override
     public User registerUser(UserDto userDto, String password) {
         User user = new User();
@@ -30,9 +36,24 @@ public class UserServiceImpl implements UserService {
         user.setName(userDto.getName());
         user.setPhone(userDto.getPhone());
         user.setEmail(userDto.getEmail());
-        user.setRoles(Set.of("USER")); // 預設角色
+
+        // 預設角色為 EMPLOYEE
+        Role defaultRole = roleRepository.findByRoleName("EMPLOYEE")
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+        user.setRoles(Set.of(defaultRole));
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public void assignRoleToUser(Long userId, String roleName) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Role role = roleRepository.findByRoleName(roleName).orElseThrow(() -> new RuntimeException("Role not found"));
+
+        if (!user.getRoles().contains(role)) {
+            user.getRoles().add(role);
+        }
+        userRepository.save(user);
     }
 
     @Override
@@ -49,15 +70,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(Long id, UserDto userDto) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
         user.setName(userDto.getName());
         user.setPhone(userDto.getPhone());
         user.setEmail(userDto.getEmail());
-        user.setRoles(userDto.getRoles());
+
+        // 轉換 Set<String> -> Set<Role>
+        Set<Role> roleEntities = userDto.getRoles().stream()
+                .map(roleName -> roleRepository.findByRoleName(roleName)
+                        .orElseThrow(() -> new RuntimeException("Role not found: " + roleName)))
+                .collect(Collectors.toSet());
+
+        user.setRoles(roleEntities); // 設定轉換後的角色集合
 
         userRepository.save(user);
         return convertToDto(user);
     }
+
 
     @Override
     public void deleteUser(Long id) {
@@ -70,7 +100,14 @@ public class UserServiceImpl implements UserService {
         dto.setName(user.getName());
         dto.setPhone(user.getPhone());
         dto.setEmail(user.getEmail());
-        dto.setRoles(user.getRoles());
+    
+        // 轉換 Set<Role> -> Set<String>
+        Set<String> roleNames = user.getRoles().stream()
+                .map(Role::getRoleName) // 取出 roleName
+                .collect(Collectors.toSet());
+    
+        dto.setRoles(roleNames);
         return dto;
     }
+    
 }

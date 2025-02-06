@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface UserService {
     User registerUser(UserDto userDto, String password);
+    void assignRoleToUser(Long userId, String roleName);
     List<UserDto> getAllUsers();
     Optional<UserDto> getUserById(Long id);
     UserDto updateUser(Long id, UserDto userDto);

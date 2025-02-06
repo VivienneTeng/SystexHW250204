@@ -31,6 +31,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Book findByIsbn(@Param("isbn") String isbn);
 
     // 依分類查詢，並支援分頁與排序
-    Page<Book> findByCategoryIdPaged(Long categoryId, Pageable pageable);
+    Page<Book> findByCategoryId(Long categoryId, Pageable pageable);
 }
 

@@ -3,6 +3,7 @@ package com.example.bookstore.security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.security.Key;
 import java.util.Base64;
@@ -12,7 +13,9 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = generateSecureKey();
+    @Value("${jwt.secret}")
+    private String secretKey;
+
     private static final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 小時
 
     private static String generateSecureKey() {
@@ -22,7 +25,8 @@ public class JwtUtil {
     }
 
     private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+        byte[] keyBytes = Base64.getDecoder().decode(secretKey);
+    return Keys.hmacShaKeyFor(keyBytes);
     }
 
     // 產生 Token
