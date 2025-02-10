@@ -58,18 +58,18 @@ CREATE TABLE Books (
 );
 
 CREATE TABLE Roles (
-    RoleId INT AUTO_INCREMENT PRIMARY KEY,  -- 角色唯一識別碼
-    RoleName VARCHAR(50) NOT NULL UNIQUE   -- 角色名稱（EMPLOYEE, BOOK_MANAGER, ADMIN）
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- 角色唯一識別碼
+    role_name VARCHAR(50) NOT NULL UNIQUE   -- 角色名稱（EMPLOYEE, BOOK_MANAGER, ADMIN）
 );
 
-INSERT INTO Roles (RoleName) 
+INSERT INTO Roles (role_name) 
 VALUES
     ('EMPLOYEE'),
     ('BOOK_MANAGER'),
     ('ADMIN');
 
 CREATE TABLE Users (
-    UserId BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     Username VARCHAR(255) NOT NULL UNIQUE,
     Password VARCHAR(255) NOT NULL,
     Name VARCHAR(255) NOT NULL,
@@ -80,12 +80,12 @@ CREATE TABLE Users (
 );
 
 -- 管理使用者與角色的對應關係
-CREATE TABLE UserRoles (
-    UserId BIGINT NOT NULL,
-    RoleId INT NOT NULL,
-    PRIMARY KEY (UserId, RoleId),
-    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
-    FOREIGN KEY (RoleId) REFERENCES Roles(RoleId) ON DELETE CASCADE
+CREATE TABLE user_roles   (
+    user_id  BIGINT NOT NULL,
+    role_id INT NOT NULL,
+    PRIMARY KEY (user_id, role_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES Roles(id) ON DELETE CASCADE
 );
 
 
@@ -133,14 +133,15 @@ VALUES
 -- 插入測試 Users 資料
 INSERT INTO Users (Username, Password, Name, Phone, Email)
 VALUES 
-    ('admin', '$2b$12$tD0j5yjzOXrNlZkQug8R4uDspbPZUwZidkM3Ix0LDdpXUCB5hb4Lq', 'Admin User', '0987654321', 'admin@example.com'),
+    ('admin', '$2a$10$jPs7pVPOfDyOavI/Lfeuiu.zk38t2oXTYK8ObYtxRDi3N2.9INfe2', 'Admin User', '123456789', 'admin@example.com'),
     ('employee1', 'hashed_password1', '員工A', '0911111111', 'employee1@example.com'),
     ('bookmanager1', 'hashed_password2', '書籍管理員A', '0933333333', 'bookmanager1@example.com'),
     ('admin1', 'hashed_password3', '主管A', '0955555555', 'admin1@example.com');
 
 -- 指派角色到使用者（UserRoles）
-INSERT INTO UserRoles (UserId, RoleId) 
+INSERT INTO user_roles   (user_id, role_id) 
 VALUES
-    (1, 1), -- 員工1 角色: EMPLOYEE
-    (2, 2), -- 書籍管理1 角色: BOOK_MANAGER
-    (3, 3);
+    (1, 3),
+    (2, 1), -- 員工1 角色: EMPLOYEE
+    (3, 2), -- 書籍管理1 角色: BOOK_MANAGER
+    (4, 3);

@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -53,11 +52,10 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) 
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "localhost:8080/").permitAll()
-                .requestMatchers("/api/auth/**").permitAll() // 允許未登入訪問api，實現登入bookstore的功能
-                .requestMatchers("/api/users", "/api/users/{id}").permitAll() // 所有人可查詢員工、特定員工
-                .requestMatchers("/api/users/register").permitAll() // 所有人可註冊新員工
+                .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/api/auth/**").permitAll() // 允許未登入訪問api，所有人皆可註冊、登入、登出
                 .requestMatchers("/api/books", "/api/books/{id}").permitAll() // 所有人可查詢書籍或特定書籍
+                .requestMatchers("/api/users", "/api/users/{id}").hasAnyRole("EMPLOYEE", "BOOK_MANAGER", "ADMIN") // EMPLOYEE、BOOK_MANAGER、ADMIN可查詢員工、特定員工
                 .requestMatchers("/api/books/**").hasRole("BOOK_MANAGER") // 只有 BOOK_MANAGER 可新增、更新、刪除書籍
                 .requestMatchers("/api/users/**").hasRole("ADMIN") // 只有 ADMIN 可變更員工角色、更新員工資訊、刪除員工
                 .anyRequest().authenticated()

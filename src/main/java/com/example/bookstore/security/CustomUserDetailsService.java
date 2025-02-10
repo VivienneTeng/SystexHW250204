@@ -23,12 +23,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
+
         // 將 Set<String> 角色轉換為 List<GrantedAuthority>
         List<SimpleGrantedAuthority> authorities = user.getRoles() == null ? 
-        List.of(new SimpleGrantedAuthority("ROLE_EMPLOYEE")) : 
-        user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRoleName()))
-                .collect(Collectors.toList());
+                List.of(new SimpleGrantedAuthority("ROLE_EMPLOYEE")) : 
+                user.getRoles().stream()
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRoleName()))
+                        .collect(Collectors.toList());
 
 
         return new org.springframework.security.core.userdetails.User(
