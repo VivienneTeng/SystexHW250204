@@ -44,8 +44,8 @@ CREATE TABLE Books (
     CategoryID INT,                          -- 類別 ID（可以為 NULL）
     
     ISBN VARCHAR(13) UNIQUE NOT NULL,        -- 書籍 ISBN 編號
-    OriginalPrice INT NOT NULL,    -- **定價**
-    SalePrice INT NOT NULL,        -- **售價**
+    originalPrice INT NOT NULL,    -- **定價**
+    salePrice INT NOT NULL,        -- **售價**
     PublishedDate DATE,                       -- 出版日期
     StockQuantity INT NOT NULL,               -- 庫存數量
     Description TEXT NULL,            -- 簡介

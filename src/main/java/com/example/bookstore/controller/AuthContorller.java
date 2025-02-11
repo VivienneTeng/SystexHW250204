@@ -69,8 +69,8 @@ public class AuthContorller {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout() {
-        SecurityContextHolder.clearContext(); // 清除安全上下文
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        SecurityContextHolder.clearContext(); // 清除當前使用者的安全上下文
         return ResponseEntity.ok("Logged out successfully");
     }
 

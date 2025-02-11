@@ -29,10 +29,10 @@ public class Book {
     @Column(name = "ISBN", nullable = false, length = 13, unique = true)  
     private String isbn;
 
-    @Column(name = "OriginalPrice", nullable = false) 
+    @Column(name = "originalPrice", nullable = false) 
     private Integer originalPrice;
 
-    @Column(name = "SalePrice", nullable = true) 
+    @Column(name = "salePrice", nullable = false) 
     private Integer salePrice; 
 
     @Column(name = "PublishedDate", nullable = true)  

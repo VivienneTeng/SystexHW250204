@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 
 
 @Configuration          // 告訴 Spring 這是一個 組態類別（Configuration Class）
@@ -76,7 +77,14 @@ public class SecurityConfig {
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))       // 讓 API 無狀態
             .formLogin(login -> login.disable())    // 禁用 Spring Security 的預設登入表單
-            .logout(logout -> logout.logoutUrl("/api/auth/logout").permitAll())
+            .logout(logout -> logout
+                .logoutUrl("/api/auth/logout") // 指定登出端點
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    response.getWriter().write("{\"message\": \"Logged out successfully\"}");
+                })
+                .permitAll()
+            )
             .httpBasic(basic -> basic.disable());
 
         // 加入 JWT 過濾器
