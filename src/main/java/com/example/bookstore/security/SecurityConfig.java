@@ -1,5 +1,8 @@
 package com.example.bookstore.security;
 
+import com.example.bookstore.security.JwtAuthenticationFilter;
+import com.example.bookstore.security.JwtUtil;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +15,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 @Configuration          // 告訴 Spring 這是一個 組態類別（Configuration Class）
 @EnableWebSecurity      // 啟用 Spring Security，讓專案的 API 受到保護
@@ -19,9 +24,11 @@ public class SecurityConfig {
 
     // 加載使用者資料的介面
     private final CustomUserDetailsService userDetailsService;
-
-    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+    private final JwtUtil jwtUtil;
+    
+    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtUtil jwtUtil) {
         this.userDetailsService = userDetailsService;
+        this.jwtUtil = jwtUtil;
     }
 
     // 密碼加密
@@ -46,6 +53,12 @@ public class SecurityConfig {
         return authProvider;
     }
 
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtUtil, userDetailsService);
+    }
+
+
     // 安全性設定
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -55,7 +68,8 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll() // 允許未登入訪問api，所有人皆可註冊、登入、登出
                 .requestMatchers("/api/books", "/api/books/{id}").permitAll() // 所有人可查詢書籍或特定書籍
-                .requestMatchers("/api/users", "/api/users/{id}").hasAnyRole("EMPLOYEE", "BOOK_MANAGER", "ADMIN") // EMPLOYEE、BOOK_MANAGER、ADMIN可查詢員工、特定員工
+                .requestMatchers("/api/users", "/api/users/{id}").hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_BOOK_MANAGER", "ROLE_ADMIN")
+                // EMPLOYEE、BOOK_MANAGER、ADMIN可查詢所有員工、特定員工
                 .requestMatchers("/api/books/**").hasRole("BOOK_MANAGER") // 只有 BOOK_MANAGER 可新增、更新、刪除書籍
                 .requestMatchers("/api/users/**").hasRole("ADMIN") // 只有 ADMIN 可變更員工角色、更新員工資訊、刪除員工
                 .anyRequest().authenticated()
@@ -64,6 +78,10 @@ public class SecurityConfig {
             .formLogin(login -> login.disable())    // 禁用 Spring Security 的預設登入表單
             .logout(logout -> logout.logoutUrl("/api/auth/logout").permitAll())
             .httpBasic(basic -> basic.disable());
+
+        // 加入 JWT 過濾器
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
 
         return http.build();
     }

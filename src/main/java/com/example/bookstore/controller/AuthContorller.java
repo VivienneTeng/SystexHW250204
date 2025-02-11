@@ -67,4 +67,11 @@ public class AuthContorller {
         User newUser = userService.registerUser(userDto, password);
         return ResponseEntity.ok(newUser);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() {
+        SecurityContextHolder.clearContext(); // 清除安全上下文
+        return ResponseEntity.ok("Logged out successfully");
+    }
+
 }
