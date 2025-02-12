@@ -8,7 +8,6 @@ import lombok.Data;
 @Data
 public class BookDto {
     private String title;
-    private Long bookId;
     private String isbn;
 
     private Long authorId;              // 前端輸入時使用

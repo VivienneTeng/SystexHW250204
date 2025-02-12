@@ -3,6 +3,7 @@ package com.example.bookstore.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -14,39 +15,39 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "BookID")  
+    @Column(name = "id")  
     private Long bookId;
 
-    @Column(name = "Title", nullable = false, length = 255)  
+    @Column(nullable = false, length = 255)  
     private String title;
 
-    @Column(name = "AuthorID", nullable = false)  
+    @Column(nullable = false)  
     private Long authorId;
 
-    @Column(name = "CategoryId", nullable = true)  
+    @Column(nullable = true)  
     private Long categoryId;
 
-    @Column(name = "ISBN", nullable = false, length = 13, unique = true)  
+    @Column(nullable = false, length = 13, unique = true)  
     private String isbn;
 
-    @Column(name = "originalPrice", nullable = false) 
+    @Column(nullable = false) 
     private Integer originalPrice;
 
-    @Column(name = "salePrice", nullable = false) 
+    @Column(nullable = false) 
     private Integer salePrice; 
 
-    @Column(name = "PublishedDate", nullable = true)  
+    @Column(nullable = true)  
     private LocalDate publishedDate;
 
-    @Column(name = "StockQuantity", nullable = false) 
+    @Column(nullable = false) 
     private Integer stockQuantity;
 
     @Column(name = "Description", columnDefinition = "TEXT", nullable = true) 
     private String description;
     
-    @Column(name = "CreatedAt", nullable = false, updatable = false) 
+    @Column(nullable = false, updatable = false) 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "UpdatedAt", nullable = false)  
+    @Column(nullable = false)  
     private LocalDateTime updatedAt = LocalDateTime.now();
 }

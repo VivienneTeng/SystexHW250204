@@ -66,13 +66,25 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) 
             .authorizeHttpRequests(auth -> auth
+
                 .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll() // 允許未登入訪問api，所有人皆可註冊、登入、登出
-                .requestMatchers("/api/books", "/api/books/{id}").permitAll() // 所有人可查詢書籍或特定書籍
-                .requestMatchers("/api/users", "/api/users/{id}").hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_BOOK_MANAGER", "ROLE_ADMIN")
+
+                //.requestMatchers("/api/books/**").hasRole("BOOK_MANAGER") 
+                .requestMatchers("POST", "/api/books").hasRole("BOOK_MANAGER")
+                .requestMatchers("PUT", "/api/books/{id}").hasRole("BOOK_MANAGER")
+                .requestMatchers("DELETE", "/api/books/{id}").hasRole("BOOK_MANAGER")
+                // 只有 BOOK_MANAGER 可新增、更新、刪除書籍
+                
+                .requestMatchers("PUT", "/api/users/{id}").hasRole("ADMIN")
+                .requestMatchers("DELETE", "/api/users/{id}").hasRole("ADMIN")
+                .requestMatchers("PUT", "/api/users/{id}/role").hasRole("ADMIN")
+                // 只有 ADMIN 可變更員工角色、更新員工資訊、刪除員工
+
+                .requestMatchers("GET","/api/books", "/api/books/{id}").permitAll() // 所有人可查詢書籍或特定書籍
+                .requestMatchers("GET", "/api/users", "/api/users/{id}").hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_BOOK_MANAGER", "ROLE_ADMIN")
                 // EMPLOYEE、BOOK_MANAGER、ADMIN可查詢所有員工、特定員工
-                .requestMatchers("/api/books/**").hasRole("BOOK_MANAGER") // 只有 BOOK_MANAGER 可新增、更新、刪除書籍
-                .requestMatchers("/api/users/**").hasRole("ADMIN") // 只有 ADMIN 可變更員工角色、更新員工資訊、刪除員工
+                
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))       // 讓 API 無狀態

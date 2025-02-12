@@ -1,7 +1,9 @@
 package com.example.bookstore.controller;
 
 import com.example.bookstore.dto.BookDto;
+import com.example.bookstore.dto.UserDto;
 import com.example.bookstore.entity.Book;
+import com.example.bookstore.entity.User;
 import com.example.bookstore.exception.ResourceNotFoundException;
 import com.example.bookstore.service.BookService;
 
@@ -23,15 +25,14 @@ public class BookController {
 
     // 取得所有書籍
     @GetMapping
-    public ResponseEntity<List<Book>> getAllBooks() {
-        List<Book> books = bookService.getAllBooks();
-        return ResponseEntity.ok(books);
+    public List<BookDto> getAllBooks() {
+        return bookService.getAllBooks();
     }
 
     // 取得特定書籍（透過 ID）
     @GetMapping("/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable Long id) {
-        Optional<Book> book = bookService.getBookById(id);
+    public ResponseEntity<BookDto> getBookById(@PathVariable Long id) {
+        Optional<BookDto> book = bookService.getBookById(id);
         return book.map(ResponseEntity::ok)         //如果書籍存在，則回傳 ResponseEntity.ok(book)
                 .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
     }
@@ -49,8 +50,7 @@ public class BookController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('BOOK_MANAGER')")
     public ResponseEntity<BookDto> updateBook(@PathVariable Long id, @RequestBody BookDto bookDto) {
-        BookDto updatedBook = bookService.updateBook(id, bookDto);
-        return ResponseEntity.ok(updatedBook);
+        return ResponseEntity.ok(bookService.updateBook(id, bookDto));
     }
 
     // 刪除書籍

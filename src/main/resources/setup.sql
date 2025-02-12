@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS Users;
 
 -- 創建 Authors（作者表）
 CREATE TABLE Authors (
-    AuthorID INT AUTO_INCREMENT PRIMARY KEY,  -- 作者唯一識別碼
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- 作者唯一識別碼
     Name VARCHAR(255) NOT NULL,                -- 作者姓名
     Biography TEXT,                            -- 作者簡介
     BirthDate DATE,                            -- 出生日期
@@ -23,12 +23,12 @@ CREATE TABLE Authors (
 );
 
 -- 插入 "佚名" 作者，確保刪除作者時能指向它
-INSERT INTO Authors (AuthorID, Name, Biography)
+INSERT INTO Authors (id, Name, Biography)
 VALUES (1, '佚名', '作者不詳或已刪除');
 
 -- 創建 Categories（書籍分類表）
 CREATE TABLE Categories (
-    CategoryID INT AUTO_INCREMENT PRIMARY KEY,  -- 類別唯一識別碼
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- 類別唯一識別碼
     CategoryName VARCHAR(100) UNIQUE NOT NULL,  -- 類別名稱（唯一）
     Description TEXT,                           -- 類別描述
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 創建時間
@@ -36,26 +36,27 @@ CREATE TABLE Categories (
 );
 
 -- 創建 Books（書籍表）
-CREATE TABLE Books (
-    BookID INT AUTO_INCREMENT PRIMARY KEY,  -- 書籍唯一識別碼
-    Title VARCHAR(255) NOT NULL,             -- 書名
+CREATE TABLE books (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- 書籍唯一識別碼
+    title VARCHAR(255) NOT NULL,             -- 書名
     
-    AuthorID INT NOT NULL DEFAULT 1,        -- 預設為 "佚名"（AuthorID = 1）
-    CategoryID INT,                          -- 類別 ID（可以為 NULL）
+    author_id INT NOT NULL DEFAULT 1,        -- 預設為 "佚名"（author_id = 1）
+    category_id INT,                          -- 類別 ID（可以為 NULL）
     
-    ISBN VARCHAR(13) UNIQUE NOT NULL,        -- 書籍 ISBN 編號
-    originalPrice INT NOT NULL,    -- **定價**
-    salePrice INT NOT NULL,        -- **售價**
-    PublishedDate DATE,                       -- 出版日期
-    StockQuantity INT NOT NULL,               -- 庫存數量
-    Description TEXT NULL,            -- 簡介
+    isbn VARCHAR(13) UNIQUE NOT NULL,        -- 書籍 ISBN 編號
+    original_price INT NOT NULL,    -- **定價**
+    sale_price INT NOT NULL,        -- **售價**
+    published_date DATE,                       -- 出版日期
+    stock_quantity INT NOT NULL,               -- 庫存數量
+    description TEXT NULL,            -- 簡介
 
-    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 創建時間
-    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新時間
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 創建時間
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新時間
 
-    FOREIGN KEY (AuthorID) REFERENCES Authors(AuthorID) ON DELETE SET DEFAULT,  -- 刪除作者時變 "佚名"
-    FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID) ON DELETE SET NULL -- 刪除分類時設為 NULL
+    FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE SET DEFAULT,  -- 刪除作者時變 "佚名"
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL -- 刪除分類時設為 NULL
 );
+
 
 CREATE TABLE Roles (
     id INT AUTO_INCREMENT PRIMARY KEY,  -- 角色唯一識別碼
@@ -115,7 +116,7 @@ VALUES
     ('Non-Fiction', 'Books based on real events, biographies, and historical accounts.'),
     ('Technology', 'Books covering technological advancements and computer science.');
 
-INSERT INTO Books (Title, AuthorID, CategoryID, ISBN, OriginalPrice, SalePrice, PublishedDate, StockQuantity, Description) 
+INSERT INTO Books (title, author_id, category_id, isbn, original_price, sale_price, published_date, stock_quantity, Description) 
 VALUES 
     ('Harry Potter and the Sorcerer''s Stone', 2, 1, '9780439708180', 494, 360, '1997-06-26', 100, 'A young wizard discovers his magical heritage and embarks on an epic journey at Hogwarts.'),
     ('1984', 3, 2, '9780451524935', 490, 387, '1949-06-08', 50, 'A dystopian novel depicting a totalitarian regime that controls every aspect of life.'),

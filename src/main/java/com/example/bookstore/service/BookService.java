@@ -9,8 +9,8 @@ import java.util.Optional;
 
 public interface BookService {
     Book createBook(BookDto bookDto);
-    List<Book> getAllBooks();
-    Optional<Book> getBookById(Long id) throws ResourceNotFoundException;
+    List<BookDto> getAllBooks();
+    Optional<BookDto> getBookById(Long id) throws ResourceNotFoundException;
     BookDto updateBook(Long id, BookDto bookDto) throws ResourceNotFoundException;
     void deleteBook(Long id) throws ResourceNotFoundException;
 }
