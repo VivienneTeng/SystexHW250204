@@ -38,7 +38,7 @@ public class BookController {
     }
 
     // 新增書籍
-    @PostMapping
+    @PostMapping("/manage")
     @PreAuthorize("hasRole('BOOK_MANAGER')")
     public ResponseEntity<Book> createBook(@RequestBody BookDto bookDto) {
         Book createdBook = bookService.createBook(bookDto);
@@ -47,14 +47,14 @@ public class BookController {
     }
 
     // 更新書籍
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/manage")
     @PreAuthorize("hasRole('BOOK_MANAGER')")
     public ResponseEntity<BookDto> updateBook(@PathVariable Long id, @RequestBody BookDto bookDto) {
         return ResponseEntity.ok(bookService.updateBook(id, bookDto));
     }
 
     // 刪除書籍
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/manage")
     @PreAuthorize("hasRole('BOOK_MANAGER')")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);

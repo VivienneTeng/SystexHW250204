@@ -7,12 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.bookstore.dto.JwtResponse;
-import com.example.bookstore.dto.LoginRequest;
-import com.example.bookstore.dto.UserDto;
 import com.example.bookstore.entity.User;
 import com.example.bookstore.security.JwtUtil;
 import com.example.bookstore.service.UserService;
+import com.example.bookstore.dto.*;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +18,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.authentication.AuthenticationManager;
 import java.util.List;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -72,6 +72,18 @@ public class AuthContorller {
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
         SecurityContextHolder.clearContext(); // 清除當前使用者的安全上下文
         return ResponseEntity.ok("Logged out successfully");
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Map<String, String>> forgotPassword(@RequestBody ResetPasswordRequest request) {
+        Map<String, String> response = userService.sendResetPasswordEmail(request.getEmail());
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        userService.resetPassword(token, newPassword);
+        return ResponseEntity.ok("Password reset successful");
     }
 
 }

@@ -11,10 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.UUID;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -43,6 +47,38 @@ public class UserServiceImpl implements UserService {
         user.setRoles(Set.of(defaultRole));
 
         return userRepository.save(user);
+    }
+
+    private Map<String, String> resetTokens = new HashMap<>();
+
+    @Override
+    public Map<String, String> sendResetPasswordEmail(String email) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String token = UUID.randomUUID().toString();
+        resetTokens.put(token, user.getEmail());
+
+        // 直接回傳 email 和重置連結
+        Map<String, String> response = new HashMap<>();
+        response.put("email", user.getEmail());
+        response.put("resetLink", "http://localhost:8080/api/auth/reset-password?token=" + token);
+        return response;
+    }
+
+    public void resetPassword(String token, String newPassword) {
+        String email = resetTokens.get(token);
+        if (email == null) {
+            throw new RuntimeException("Invalid or expired token");
+        }
+
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        resetTokens.remove(token);
     }
 
     @Override

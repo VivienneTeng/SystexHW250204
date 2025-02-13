@@ -41,14 +41,14 @@ public class UserController {
     }
 
     // 更新員工資訊
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/manage")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
         return ResponseEntity.ok(userService.updateUser(id, userDto));
     }
 
     // 刪除員工
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/manage")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
