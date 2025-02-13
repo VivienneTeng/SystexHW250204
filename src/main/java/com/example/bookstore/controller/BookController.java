@@ -1,9 +1,7 @@
 package com.example.bookstore.controller;
 
 import com.example.bookstore.dto.BookDto;
-import com.example.bookstore.dto.UserDto;
 import com.example.bookstore.entity.Book;
-import com.example.bookstore.entity.User;
 import com.example.bookstore.exception.ResourceNotFoundException;
 import com.example.bookstore.service.BookService;
 

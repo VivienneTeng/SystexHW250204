@@ -1,8 +1,5 @@
 package com.example.bookstore.security;
 
-import com.example.bookstore.security.JwtAuthenticationFilter;
-import com.example.bookstore.security.JwtUtil;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
