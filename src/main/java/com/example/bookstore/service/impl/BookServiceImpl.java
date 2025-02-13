@@ -2,10 +2,7 @@ package com.example.bookstore.service.impl;
 
 import com.example.bookstore.dao.BookRepository;
 import com.example.bookstore.dto.BookDto;
-import com.example.bookstore.dto.UserDto;
 import com.example.bookstore.entity.Book;
-import com.example.bookstore.entity.Role;
-import com.example.bookstore.entity.User;
 import com.example.bookstore.exception.ResourceNotFoundException;
 import com.example.bookstore.service.BookService;
 
@@ -14,9 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.Collections;
 
 //未來需要使用 Collectors.toList() 來處理 List<Book> 的轉換
 //import java.util.stream.Collectors;

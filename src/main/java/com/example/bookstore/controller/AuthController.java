@@ -70,9 +70,14 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
-        SecurityContextHolder.clearContext(); // 清除當前使用者的安全上下文
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7); // 移除 "Bearer " 前綴
+        }
+        jwtUtil.blacklistToken(token);
+        SecurityContextHolder.clearContext();
         return ResponseEntity.ok("Logged out successfully");
     }
+    
 
     @PostMapping("/forgot-password")
     public ResponseEntity<Map<String, String>> forgotPassword(@RequestBody ResetPasswordRequest request) {

@@ -1,7 +1,7 @@
-package com.example.bookstore.security;
+package com.example.bookstore.config;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -13,6 +13,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.example.bookstore.security.CustomUserDetailsService;
+import com.example.bookstore.security.JwtAuthenticationFilter;
+import com.example.bookstore.security.JwtUtil;
+
 import jakarta.servlet.http.HttpServletResponse;
 
 
@@ -60,6 +65,9 @@ public class SecurityConfig {
     // 安全性設定
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // 加入 JWT 過濾器
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
         http
             .csrf(csrf -> csrf.disable()) 
             .authorizeHttpRequests(auth -> auth
@@ -68,14 +76,14 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll() // 允許未登入訪問api，所有人皆可註冊、登入、登出
 
                 //.requestMatchers("/api/books/**").hasRole("BOOK_MANAGER") 
-                .requestMatchers("POST", "/api/books/manage").hasRole("BOOK_MANAGER")
-                .requestMatchers("PUT", "/api/books/{id}/manage").hasRole("BOOK_MANAGER")
-                .requestMatchers("DELETE", "/api/books/{id}/mange").hasRole("BOOK_MANAGER")
+                .requestMatchers("/api/books/manage").hasRole("BOOK_MANAGER")
+                .requestMatchers("/api/books/{id}/manage").hasRole("BOOK_MANAGER")
+                .requestMatchers("/api/books/{id}/manage").hasRole("BOOK_MANAGER")
                 // 只有 BOOK_MANAGER 可新增、更新、刪除書籍
                 
-                .requestMatchers("PUT", "/api/users/{id}/manage").hasRole("ADMIN")
-                .requestMatchers("DELETE", "/api/users/{id}/manage").hasRole("ADMIN")
-                .requestMatchers("PUT", "/api/users/{id}/role").hasRole("ADMIN")
+                .requestMatchers("/api/users/{id}/manage").hasRole("ADMIN")
+                .requestMatchers("/api/users/{id}/manage").hasRole("ADMIN")
+                .requestMatchers( "/api/users/{id}/role").hasRole("ADMIN")
                 // 只有 ADMIN 可變更員工角色、更新員工資訊、刪除員工
 
                 .requestMatchers("/api/books", "/api/books/{id}").permitAll() // 所有人可查詢書籍或特定書籍
@@ -95,10 +103,6 @@ public class SecurityConfig {
                 .permitAll()
             )
             .httpBasic(basic -> basic.disable());
-
-        // 加入 JWT 過濾器
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
 
         return http.build();
     }
