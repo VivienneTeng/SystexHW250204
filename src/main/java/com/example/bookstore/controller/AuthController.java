@@ -73,8 +73,11 @@ public class AuthController {
         if (token.startsWith("Bearer ")) {
             token = token.substring(7); // 移除 "Bearer " 前綴
         }
+        System.out.println("Before blacklist: " + token);
         jwtUtil.blacklistToken(token);
+        System.out.println("After blacklist: " + token);
         SecurityContextHolder.clearContext();
+        System.out.println("Clear Context(): " + token);
         return ResponseEntity.ok("Logged out successfully");
     }
     
