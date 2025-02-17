@@ -135,9 +135,9 @@ VALUES
 INSERT INTO Users (Username, Password, Name, Phone, Email)
 VALUES 
     ('admin', '$2a$10$jPs7pVPOfDyOavI/Lfeuiu.zk38t2oXTYK8ObYtxRDi3N2.9INfe2', 'Admin User', '123456789', 'admin@example.com'),
-    ('employee1', 'hashed_password1', '員工A', '0911111111', 'employee1@example.com'),
-    ('bookmanager1', 'hashed_password2', '書籍管理員A', '0933333333', 'bookmanager1@example.com'),
-    ('admin1', 'hashed_password3', '主管A', '0955555555', 'admin1@example.com');
+    ('employee1', '$2a$10$hQTMVepx5rcZ8MXs1nMw5ur6TOP0m/0QkycDAxuGG.Y7xUBqonvPm', '員工A', '0911111111', 'employee1@example.com'),
+    ('bookmanager1', '$2a$10$hQTMVepx5rcZ8MXs1nMw5ur6TOP0m/0QkycDAxuGG.Y7xUBqonvPm', '書籍管理員A', '0933333333', 'bookmanager1@example.com'),
+    ('admin1', '$2a$10$hQTMVepx5rcZ8MXs1nMw5ur6TOP0m/0QkycDAxuGG.Y7xUBqonvPm', '主管A', '0955555555', 'admin1@example.com');
 
 -- 指派角色到使用者（UserRoles）
 INSERT INTO user_roles   (user_id, role_id) 

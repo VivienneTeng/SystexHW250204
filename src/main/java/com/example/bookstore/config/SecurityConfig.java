@@ -87,10 +87,15 @@ public class SecurityConfig {
                 // 只有 ADMIN 可變更員工角色、更新員工資訊、刪除員工
 
                 .requestMatchers("/api/books", "/api/books/{id}").permitAll() // 所有人可查詢書籍或特定書籍
-                .requestMatchers("/api/users", "/api/users/{id}").hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_BOOK_MANAGER", "ROLE_ADMIN")
+                //.requestMatchers("/api/users", "/api/users/{id}").hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_BOOK_MANAGER", "ROLE_ADMIN")
                 // EMPLOYEE、BOOK_MANAGER、ADMIN可查詢所有員工、特定員工
                 
                 .anyRequest().authenticated()
+            )
+            .exceptionHandling(exception -> exception
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                })
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))       // 讓 API 無狀態
             .formLogin(login -> login.disable())    // 禁用 Spring Security 的預設登入表單
