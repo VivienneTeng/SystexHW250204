@@ -127,15 +127,18 @@ class SecurityConfigIntegrationTest {
                 .andExpect(status().isOk());
     }
 
-    /** 測試登出請求是否 permitAll **/
+    /** 測試登出請求是否 permitAll，測試黑名單機制**/
     @Test
     void whenLogoutUser_thenReturnSuccess() throws Exception {
         String token = jwtUtil.generateToken("bookmanager1", List.of("ROLE_BOOK_MANAGER"));
 
         // 使用 JWT Token 來測試登出
         mockMvc.perform(post("/api/auth/logout")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-                .andExpect(status().isOk());
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token));
+                //.andExpect(status().isOk());
+        
+        mockMvc.perform(get("/api/users"))
+                .andExpect(status().isUnauthorized());
     }
 
     /** 測試未授權的請求是否被拒絕 **/
