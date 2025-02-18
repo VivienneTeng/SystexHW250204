@@ -7,14 +7,13 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.test.util.ReflectionTestUtils;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 import java.util.Base64;
 
 
@@ -98,3 +97,36 @@ class JwtUtilTest {
         assertTrue(jwtUtil.isTokenBlacklisted(token));
     }
 }
+
+@SpringBootTest
+class JwtUtilIntegrationTest {
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @BeforeEach
+    void setUp() {
+        ReflectionTestUtils.setField(jwtUtil, "secretKey", "Qm2Z6nH3cJ4lMlsdfgVnPz7oX9O3lQ8gV5KzB4T9L3Y="); // 設定 JWT 密鑰
+    }
+
+    @Test
+    void testGenerateAndValidateToken() {
+        String token = jwtUtil.generateToken("integrationUser", List.of("ROLE_ADMIN"));
+        assertNotNull(token);
+
+        boolean isValid = jwtUtil.validateToken(token, "integrationUser");
+        assertTrue(isValid);
+    }
+
+    @Test
+    void testTokenBlacklistIntegration() {
+        String token = jwtUtil.generateToken("blacklistUser", List.of("ROLE_USER"));
+        assertNotNull(token);
+
+        jwtUtil.blacklistToken(token);
+        boolean isBlacklisted = jwtUtil.isTokenBlacklisted(token);
+
+        assertTrue(isBlacklisted);
+    }
+}
+
