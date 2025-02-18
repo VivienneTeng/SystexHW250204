@@ -130,7 +130,7 @@ class SecurityConfigIntegrationTest {
     /** 測試登出請求是否 permitAll，測試黑名單機制**/
     @Test
     void whenLogoutUser_thenReturnSuccess() throws Exception {
-        String token = jwtUtil.generateToken("bookmanager1", List.of("ROLE_BOOK_MANAGER"));
+        String token = jwtUtil.generateToken("ad", List.of("ROLE_ADMIN"));
 
         // 使用 JWT Token 來測試登出
         mockMvc.perform(post("/api/auth/logout")
@@ -175,6 +175,7 @@ class SecurityConfigIntegrationTest {
     @Test
     void whenBookManagerAccessBookManagement_thenReturnSuccess() throws Exception {
         String token = "Bearer " + jwtUtil.generateToken("bookmanager1", List.of("ROLE_BOOK_MANAGER"));
+        System.out.println("token " + token);
 
         mockMvc.perform(post("/api/books/manage")
                 .header(HttpHeaders.AUTHORIZATION, token)
@@ -194,7 +195,7 @@ class SecurityConfigIntegrationTest {
     void whenAdminChangesUserRole_thenReturnSuccess() throws Exception {
         String token = "Bearer " + jwtUtil.generateToken("admin1", List.of("ROLE_ADMIN"));
 
-        mockMvc.perform(put("/api/users/1/role")
+        mockMvc.perform(put("/api/users/3/role")
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("role", "BOOK_MANAGER"))
