@@ -23,7 +23,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/bookstore
+      SPRING_DATASOURCE_URL: jdbc:mariadb://bookstore_db:3306/bookstore
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: Vivian2004
       JWT_SECRET: Qm2Z6nH3cJ4lMl3gD2VnPz7oX9O3lQ8gV5KzB4T9L3Y=

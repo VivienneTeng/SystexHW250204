@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mariadb://bookstore-db:3306/bookstore  # ✅ MariaDB 內部名稱
+    url: jdbc:mariadb://bookstore_db:3306/bookstore  # ✅ MariaDB 內部名稱
     username: root
     password: root
   jpa:
