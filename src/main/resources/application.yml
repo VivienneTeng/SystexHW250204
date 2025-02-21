@@ -1,14 +1,14 @@
 spring:
   datasource:
-    url: jdbc:mariadb://localhost:3306/bookstore
+    url: jdbc:mariadb://bookstore-db:3306/bookstore  # ✅ MariaDB 內部名稱
     username: root
-    password: ${DB_PASSWORD}
+    password: root
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
   redis:
-    host: localhost
+    host: redis
     port: 6379
 
 

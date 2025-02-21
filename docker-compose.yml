@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  mariadb:
+    image: mariadb:10.5
+    container_name: bookstore_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Vivian2004
+      MYSQL_DATABASE: bookstore
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: Vivian2004
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: bookstore_app
+    restart: always
+    depends_on:
+      - mariadb
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/bookstore
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: Vivian2004
+      JWT_SECRET: Qm2Z6nH3cJ4lMl3gD2VnPz7oX9O3lQ8gV5KzB4T9L3Y=
+
+volumes:
+  mariadb_data:
